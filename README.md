@@ -1,2 +1,2 @@
 # GHC
-Amiri, S., Clarke, B, Clarke, J. & Koepke, H.A. (2016). A General Hybrid Clustering Technique
+Amiri, S., Clarke, B, Clarke, J. & Koepke, H.A. (2016). A General Hybrid Clustering Technique.
