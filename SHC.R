@@ -1,6 +1,6 @@
-############# 24-May-2017
+############# 27-OCT-2014
 ############# It is just a trial version of codes.  
-############# saeid.amiri1@gmail.com
+############# samiri2@unl.edu 
 ###################################
 ################################# Ensemble    
 
@@ -280,7 +280,7 @@ stopCluster(cl)
 
 
 
-
+REDIST<-as.dist(distancematrixH(ens))
   hclustM <- hclust(REDIST, method = "single")
   cutValue <- hclustM$height[which.max(diff(hclustM$height))]
   ee<-(cutree(hclustM, h = cutValue))
