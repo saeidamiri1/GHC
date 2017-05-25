@@ -11,13 +11,12 @@ source('https://raw.githubusercontent.com/saeidamiri1/GHC/master/SHC.R')
 library("foreach")
 library("doParallel")
 
-# Find the cluster for size of 3
+# To find the cluster of size of 3
 CLUS<-SHC(Spiral,3,B=200)
 CLUS
 plot(Spiral,col=CLUS)
 
 
-
-# Estimate the number of cluster
+# To estimate the size of clusters
 EK(Spiral,B=200)
 
