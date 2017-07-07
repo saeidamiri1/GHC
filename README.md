@@ -5,4 +5,4 @@ Amiri, S., Clarke, B, Clarke, J. & Koepke, H.A. (2017). A General Hybrid Cluster
 
 Any feedback is really appreciated, please report bugs, typos or any comments by sending an email, saeid.amiri1 atsign gmail.com. 
 
-https://github.com/saeidamiri1/GHC/wiki
+See  https://github.com/saeidamiri1/GHC/wiki for the explanation of codes using the data. 
