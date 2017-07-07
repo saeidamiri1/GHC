@@ -7,6 +7,12 @@ Any feedback is really appreciated, please report bugs, typos or any comments by
 
 
 
+ 
+# Load the source
+'''
+source('https://raw.githubusercontent.com/saeidamiri1/GHC/master/SHC.R')
+'''
+
 # Load Spiral data from Github
 datasource <- "https://github.com/saeidamiri1/GHC/blob/master/SPIRAL.RData?raw=true"
 load(url(datasource))
