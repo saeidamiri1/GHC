@@ -1,5 +1,7 @@
- library("foreach")
- library("doParallel")
+source('https://raw.githubusercontent.com/saeidamiri1/GHC/master/SHC.R')
+library("foreach")
+library("doParallel")
+
 
 datasource <- "https://github.com/saeidamiri1/GHC/blob/master/SPIRAL.RData?raw=true"
  load(url(datasource))
