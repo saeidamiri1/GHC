@@ -1,0 +1,59 @@
+getPartitionFromDataframe <- function(dataframe, partitioning, subtract=FALSE, direction="rows") {
+	if(direction == "rows"){
+		if(subtract==TRUE){
+			result <- dataframe[-partitioning,]
+		} else {
+			result <- dataframe[partitioning,]
+		}
+	} else {
+		if(subtract==TRUE){
+			result <- dataframe[,-partitioning]
+		} else {
+			result <- dataframe[,partitioning]
+		}
+	}
+	result
+}
+
+getPartitionFromList <- function(list, partitioning, subtract=FALSE) {
+	if(subtract==TRUE){
+		result <- list[-partitioning]
+	} else {
+		result <- list[partitioning]
+	}
+	result
+}
+
+removeNearZeroVariance <- function(dataframe) {
+	nzv <- nearZeroVar(dataframe)	
+	result <- dataframe[-nzv,]
+}
+
+removeCorrelating <- function(dataframe) {
+	cor <- findCorrelation(cor(dataframe),cutoff=0.99)	
+	result <- dataframe[-cor,]
+}
+
+performSVMtraining <- function(trainSet, trainLab) {
+	tc <- trainControl(method="LGOCV", p = 0.75, number = 25, returnResamp = "final", verboseIter=TRUE )
+	svmTrain <- train(trainSet, trainLab, "svmPoly", tuneLength=3, trControl=tc, importance=TRUE)
+	svmTrain
+}
+
+performRFtraining <- function(trainSet, trainLab) {
+	tc <- trainControl(method="LGOCV", p = 0.75, number = 20, returnResamp = "final", verboseIter=TRUE )
+	rfTrain <- train(trainSet, trainLab, "rf", tuneLength = 12, trControl = tc, importance=TRUE)
+	rfTrain
+}
+
+predictionConfusion <- function(svmTrain, testAtData, testAtFactor){
+	predValuesSVM <- extractPrediction(list(svmTrain), testX=testAtData, testY=testAtFactor)
+	outcome <- predValuesSVM[predValuesSVM$dataType == "Test", ]
+	confusionMatrix( outcome$pred, outcome$obs )
+}
+
+getImpVars <- function(svmResult) {
+	impV <- varImp( svmResult )$importance
+	impV <- impV[order(as.vector(rowSums(impV)),decreasing=TRUE),]
+	impV
+}

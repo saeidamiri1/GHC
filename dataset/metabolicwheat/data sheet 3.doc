@@ -1,0 +1,156 @@
+parseTextfile <<- function(file,filterCol="",filterValue="", filterCol2="", filterValue2="") {
+	
+	datatable <- read.table(file,sep="\t",row.names=1,header=T)
+	datatable$Ribitol <- NULL
+	if(filterCol != "" && filterValue != ""){
+		datatable <- datatable[datatable[filterCol] == filterValue,]
+		if(filterCol2 != "" && filterValue2 != ""){
+			datatable <- datatable[datatable[filterCol2] == filterValue2,]
+		}
+	}
+	
+	groupsYear <- datatable[,1]
+	groupsGrowth <- datatable[,2]
+	groupsVariety <- datatable[,3]
+	datatable <- datatable[,-(1:3)]
+	chromas <- rownames(datatable)
+	labels <- colnames(datatable)
+	nr <- length(chromas)
+	
+	dataframe <- as.data.frame(datatable,row.names=chromas)
+	colnames(dataframe) <- labels
+	
+	return <- list(dataframe,groupsYear,groupsGrowth,groupsVariety)
+	return
+}
+
+normalize <<- function(x) { 
+    x <- sweep(x, 2, apply(x, 2, min)) 
+    x <- sweep(x, 2, apply(x, 2, max), "/") 
+	x
+}
+
+createPCA <<- function(dataframe, autoscale) {
+	pca <- prcomp(dataframe, cor=T, scale. = as.logical(autoscale))	
+	pca
+}
+
+createTSNE <<- function(dataframe, perplexity, k, max_iter){
+	require(tsne)
+	tSNE <<- tsne(dataframe, perplexity=perplexity, k=k, max_iter=max_iter)
+	tSNE
+}
+
+createKmeans <<- function(matrix, nClusters) {
+	km <- kmeans(matrix, nClusters)
+	km
+}
+
+createKmeansPlot <<- function(matrix, kmeans.result, choices=1:2, groups.factor.shape, groups.factor.color = "") {
+	if (length(choices) != 2){
+		stop("length of choices must be 2") }
+	
+	require(graphics)
+	require(RColorBrewer)
+	require(ggplot2)
+	
+	colList <- kmeans.result
+	if(groups.factor.color != ""){
+		colList <- groups.factor.color
+	}
+	
+	if(length(colList) > 9){
+		pal <- rainbow(length(colList),start=.3,end=.1)
+	} else {
+		pal <- brewer.pal(length(colList),"Set1")
+	}
+
+	xlab = paste("PC",choices[1],sep="")
+	ylab = paste("PC",choices[2],sep="")
+	
+	centersDF <- data.frame(x=kmeans.result$centers[,choices[1]],y=kmeans.result$centers[,choices[2]])
+	
+	pal <- sort(pal)
+	names(pal) <- c(1:length(colList))
+	cols = NULL
+	if(groups.factor.color != ""){
+		cols <- pal[groups.factor.color]
+	} else {
+		cols <- pal[kmeans.result$cluster]
+	}
+	kmeansPlot <- qplot(matrix[,choices[1]], matrix[,choices[2]], colour=cols,xlab=xlab,ylab=ylab,size=I(6), shape=groups.factor.shape) +
+	geom_point(data=centersDF,aes(x,y),shape=rep(2,length(kmeans.result$size)),colour=rep("black",length(kmeans.result$size)),size=6)
+	kmeansPlot
+}
+
+createPCAplot <<- function(pca,choices=1:2,chromas=NULL,metabolites=NULL,groups.factor.color,groups.factor.shape) {
+	if (length(choices) != 2){
+		stop("length of choices must be 2") }
+	if (!length(scores <- pca$x)){
+        stop(gettextf("object '%s' has no scores", deparse(substitute(pca))), domain = NA) }
+	if (is.complex(scores)){
+		stop("biplots are not defined for complex PCA") }
+	
+	require(graphics)
+	require(RColorBrewer)
+	require(ggplot2)
+
+	
+	xlab = paste("PC",choices[1],sep="")
+	ylab = paste("PC",choices[2],sep="")
+	pcaPlot <- qplot(pca$x[,choices[1]],pca$x[,choices[2]],colour=groups.factor.color,xlab=xlab,ylab=ylab,size=I(6),shape=groups.factor.shape)
+	pcaPlot
+}
+
+createTsnePlot <<- function(dataframe,groups.factor.color,groups.factor.shape) {
+	require(graphics)
+	require(RColorBrewer)
+	require(ggplot2)
+	
+	xlab = "x"
+	ylab = "y"
+	tsnePlot <- qplot(dataframe[,1],dataframe[,2],colour=groups.factor.color,shape=groups.factor.shape,xlab=xlab,ylab=ylab,size=I(6))
+	tsnePlot
+}
+
+createVARplot <- function(pca,npcs = min(8, length(pca$sdev))){
+	pcs <- pca$sdev^2
+	total.variance <- sum(pcs)
+	ppcs <- pcs / total.variance * 100
+	xp <- seq_len(npcs)
+	
+	df <- data.frame(cbind(xp,ppcs[xp]))
+	colnames(df) <- c("PC","Variance")
+	
+	require(ggplot2)
+	varPlot <- ggplot(df, aes(x=PC,y=Variance)) + geom_bar(stat = "identity") +
+    geom_text(aes(label = sprintf("%.1f%%", Variance), y = Variance+5), size = 3)
+	varPlot
+}
+
+createOverviewPlot <- function(pca,npcs = min(5, length(pca$sdev))){
+	df <- data.frame(pca$x[,1:npcs])
+	
+	require(ggplot2)
+	overviewPlot <- plotmatrix(df,colour=groups.factor)
+	overviewPlot
+}
+
+createLoadingsPlot <- function(pca,npcs = min(5, length(pca$sdev))){
+	require(RColorBrewer)
+	require(reshape2)
+	require(ggplot2)
+	
+	df <- data.frame(pca$rotation[,1:npcs])
+	mdf <- melt(df)
+	mdf$Metabolites = rep(rownames(df),npcs)
+	colnames(mdf) = c("PC","Loadings","Metabolites")
+	nColours <- length(rownames(pca$rotation))
+	pal <- rainbow(nColours,start=.4,end=.1)
+	pal <- sample(pal)
+	loadingsPlot <- ggplot(mdf, aes(x=Metabolites,y=Loadings,xlab="Metabolites",ylab="Loadings")) +
+						geom_bar(stat = "identity", fill=pal) +
+						opts(axis.text.x=theme_text(angle=90, hjust=1, vjust=0.5, colour=pal)) +
+						facet_grid(PC ~ .)
+	loadingsPlot
+}
