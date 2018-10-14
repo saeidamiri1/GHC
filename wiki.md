@@ -4,19 +4,31 @@ data points into subsets that are as homogeneous as possible, clustering is a wi
 
 
 ## Contents
+1. [Techniques](#techniques)
+   - [Clustering](#clustering)
+   - [Size of Cluster](#size-of-cluster)
+2. [Data set](#datasets)
+   - [spiral data](#)
+   - [GARBER data](#)
+   - [wheat metabolomics data](#)
+   - [Scales](#)
+   - [FLAME data](#)
 
-1. [Clustering](#clustering)
-2. [Size of Cluster](#size-of-cluster)
-3. [Manual](#plugins-for-hydrogen)
+3. [Working with data]
    - [Source](#source)
    - [Data set](#data-set)
    - [Run Cluster](#run-cluster)
    - [Size of clusters](#size-of-clusters)
 
+4. [GARBER data](#GARBER data)
+5. [References](#references)
+
+# Techniques
+ We developed algorithms for clustering and estimating the size of cluster which are explained in the belows.
 ## Clustering
 The proposed clustering method is referred to as Stabilized Hybrid Clustering (SHC) and its steps is presented in Algorithm 1,
 
-<img src="https://github.com/saeidamiri1/GHC/image/blob/master/algorithm1.png" width="800">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/algorithm1.png" width="800">
 
 Algorithm 1 is implemented in R,
 
@@ -31,28 +43,108 @@ This ```SHC()``` provides the distance matrix and the predicted cluster.
 ## Size of Cluster
 [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/manuscript/manuscript-vr3.pdf) also discussed a technique to estimate the size of clusters, it is presented in Algorithm 2,
 
-<img src="https://github.com/saeidamiri1/GHC/image/blob/master/algorithm2.png" width="800">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/algorithm2.png" width="800">
 
 Algorithm 2 is implemented in R,
 ```
 EK(observation,B=200,knmin,knmax)
 ```
-##  Manual
+
+
+# Data sets
+#### Spiral data
+The spiral data which is a non-convex data, the data can be upload via the following script, we used this data to explain the proposed algorithm.
+```
+spiral0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/spiral0.csv",sep=",",header=TRUE)
+spiral<-spiral0[,2:3]
+plot(spiral)
+```
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/spiral.jpeg" width="300">
+
+
+
+####  GARBER data
+To study the performance of the SHC’s with high dimensional data, we used the microarray data from Garber et al. (2001). The data are the 916-dimensional gene expression profiles for lung tissue from n = 72 subjects. Of these, five subjects were normal and 67 had lung tumors. The classification of the tumors into 6 classes (plus normal) was done by a pathologist giving seven classes total.
+
+```
+library("pvclust")
+data(lung)
+attach(lung)
+
+ garber<-t(lung)
+ garber<-garber[-c(1,20),]
+
+ for(i in 1:(dim(garber)[2])){
+   garber[is.na(garber[,i]),i]<-mean(garber[,i],na.rm=T)
+ }
+ garber<-as.matrix(garber)
+
+ # extract the tru label
+ row1<-grep("Adeno",row.names(garber), perl=TRUE, value=FALSE)
+ row2<-grep("normal",row.names(garber), perl=TRUE, value=FALSE)
+ row3<-grep("SCLC",row.names(garber), perl=TRUE, value=FALSE)
+ row4<-grep("SCC",row.names(garber), perl=TRUE, value=FALSE)
+ row5<-grep("node",row.names(garber), perl=TRUE, value=FALSE)
+ row6<-grep("LCLC",row.names(garber), perl=TRUE, value=FALSE)
+
+ cagarber<-NULL
+ cagarber[row1]<-1
+ cagarber[row2]<-2
+ cagarber[row3]<-3
+ cagarber[row4]<-4
+ cagarber[row5]<-5
+ cagarber[row6]<-6
+
+```
+
+#### Wheat metabolomics data
+The other dataset that we used is about Wheat metabolomics data, see Kessler et al. (2015). The dataset has 313 observations with 37 quantitative variables, and we consider ”Variety” (Antonius, CCP, Caphorn, DJ, MC2,Probus ,RdB ,R, Sandomir, Scaro, Titlis) as true label to evaluate the clustering techniques.  This data is accesible via the following script.
+
+
+```
+whme<-read.csv("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4371749/bin/Data_Sheet_1.CSV",sep='',header = TRUE)
+```
+
+The source is also availabe on [github](https://github.com/saeidamiri1/GHC/tree/master/dataset/metabolicwheat).
+
+
+#### Scales
+read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/flame0.csv",sep=",")
+
+```
+scale0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/scale0.csv",sep=",",header=TRUE)
+scaled<-scale0[,2:3]
+scalel<-scale0[,1]
+```
+
+#### FLAME data
+Fu and Medico (2007) developed a fuzzy clustering technique for DNA microarray data which they considered on the test data FLAME, the data is accessible via the following script.
+
+```
+flame0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/flame0.csv",sep=",",header=TRUE)
+flamed<-flame0[,2:3]
+flamel<-flame0[,4]
+```
+
+
+
+
+#  Manual
 ### Source
 The source of codes are available in GitHub and using the following code can be uploaded in R
 ```
 > source('https://raw.githubusercontent.com/saeidamiri1/GHC/codes/master/SHC.R')
 ```
 
-Also load the following libraries to run the computations in parallel,
+Also load the following libraries which run the computations in parallel,
 
 ```
 > library("foreach")
 > library("doParallel")
 ```
 
-###  Data set
-To describe the codes, we used the spiral data which is a non-convex data, the following script load source, dataset and plot it,
+###  Prepare data set
+To describe the codes, we used the spiral data,  the following script load source, dataset and plot it,
 
 ```
 > source('https://raw.githubusercontent.com/saeidamiri1/GHC/codes/master/SHC.R')
@@ -64,7 +156,6 @@ To describe the codes, we used the spiral data which is a non-convex data, the f
 > Spiral
 > plot(Spiral)
 ```
-<img src="https://github.com/saeidamiri1/GHC/image/blob/master/Rplot.jpeg" width="300">
 
 
 ### Run Cluster
@@ -266,34 +357,10 @@ CT is Hybrid hierarchical clustering using mutual clusters developed in Chipman 
 
 ```
 
-## Wheat metabolomics data
-The other dataset that we used is about Wheat metabolomics data, see Kessler et al. (2015). The dataset has 313 observations with 37 quantitative variables, and we consider ”Variety” (Antonius, CCP, Caphorn, DJ, MC2,Probus ,RdB ,R, Sandomir, Scaro, Titlis) as true label to evaluate the clustering techniques.  This data is accesible via the following script.
 
 
-```
-whme<-read.csv("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4371749/bin/Data_Sheet_1.CSV",sep='',header = TRUE)
-```
-
-The source is also availabe on [github](https://github.com/saeidamiri1/GHC/tree/master/dataset/metabolicwheat).
 
 
-## Scales
-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/flame0.csv",sep=",")
-
-```
-scale0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/scale0.csv",sep=",",header=TRUE)
-scaled<-scale0[,2:3]
-scalel<-scale0[,1]
-```
-
-## FLAME data
-Fu and Medico (2007) developed a fuzzy clustering technique for DNA microarray data which they considered on the test data FLAME, the data is accesible via the following script.
-
-```
-flame0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/flame0.csv",sep=",",header=TRUE)
-flamed<-flame0[,2:3]
-flamel<-flame0[,4]
-```
 
 
 ### References
