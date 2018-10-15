@@ -8,6 +8,7 @@ data points into subsets that are as homogeneous as possible, clustering is a wi
 1. [Techniques](#techniques)
    - [Clustering](#clustering)
    - [Size of Cluster](#size-of-cluster)
+   - [accuracy index](#accuracy-index)
 2. [Data set](#datasets)
    - [Spiral data](#spiral-data)
    - [GARBER data](#garber-data)
@@ -32,7 +33,7 @@ data points into subsets that are as homogeneous as possible, clustering is a wi
 5. [References](#references)
 
 # GHC library
-We implemented the methods discussed [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/GHCsource/manuscript/manuscript-vr3.pdf) in an R package, entitled GHC, and uploaded in Github. To load the library in R, run the following script.
+We implemented the methods discussed [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/GHCsource/manuscript/manuscript-vr3.pdf) in an R package, entitled "GHC", and uploaded in Github. To load the library in R, run the following script.
 
  ```
  library("devtools")
@@ -40,11 +41,11 @@ We implemented the methods discussed [Amiri et al. (2018)](https://github.com/sa
  ```
 
 # Techniques
- We developed algorithms for clustering and estimating the size of cluster which are explained in the belows.
+ We developed algorithms for clustering and estimating the size of cluster which are explained in the below.
 ## Clustering
 The proposed clustering method is referred to as Stabilized Hybrid Clustering (SHC) and its steps is presented in Algorithm 1,
 
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/GHCsourceimages/algorithm1.png" width="800">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/algorithm1.png" width="800">
 
 Algorithm 1 is implemented in R,
 
@@ -59,11 +60,19 @@ This ```SHC()``` provides the distance matrix and the predicted cluster.
 ## Size of Cluster
 [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/manuscript/manuscript-vr3.pdf) also discussed a technique to estimate the size of clusters, it is presented in Algorithm 2,
 
-<img src="https://github.com/saeidamiri1/GHC/blob/master/images/algorithm2.png" width="800">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/algorithm2.png" width="800">
 
 Algorithm 2 is implemented in R,
 ```
 EK(observation,B=200,knmin,knmax)
+```
+
+##  accuracy index (AI)
+To compare the clustering method, we can calculate an accuracy index (AI), i.e., the proportion of data points correctly assigned to their cluster.
+
+```
+ library('mclust')
+ AI<-function(trueclu,obsclus)  1-classError(trueclu, obsclus)$errorRate
 ```
 
 # Data sets
@@ -71,8 +80,7 @@ EK(observation,B=200,knmin,knmax)
 #### Spiral data
 The spiral data which is a non-convex data, the data can be upload via the following script, we used this data to explain the proposed algorithm.
 ```
-spiral0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/spiral0.csv",sep=",",header=TRUE)
-spiral<-spiral0[,2:3]
+spiral<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/spiral.csv",sep=",",header=TRUE)
 plot(spiral)
 ```
 <img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/spiral.jpeg" width="300">
@@ -130,18 +138,18 @@ whme<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsour
 We generated many simulated convex data sets with  very different scales in one dimension (vertical) but similar scales on another (horizontal). One of them is Github and accessible via the following scripts   
 
 ```
-scale0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/scales0.csv",sep=",",header=TRUE)
-scaled<-as.matrix(scale0[,2:3])
-scalel<-scale0[,1]
+scale<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/scales.csv",sep=",",header=TRUE)
+scaled<-as.matrix(scale[,1:2])
+scalel<-scale[,3]
 ```
 
 #### FLAME data
 Fu and Medico (2007) developed a fuzzy clustering technique for DNA microarray data which they considered on the test data FLAME, the data is accessible via the following script.
 
 ```
-flame0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/flame0.csv",sep=",",header=TRUE)
-flamed<-as.matrix(flame0[,2:3])
-flamel<-flame0[,4]
+flame<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/flame.csv",sep=",",header=TRUE)
+flamed<-as.matrix(flame[,1:2])
+flamel<-flame[,3]
 ```
 
 # How to run
@@ -317,10 +325,6 @@ To explain different  clustering methods, we run the clustering with [GARBER dat
 >
 >
 > ClasPred<-SHC(garber,6,B=200,knmin=knmin0,knmax=knmax0)
->
-> ## accuracy index (AI)
-> library('mclust')
-> AI<-function(trueclu,obsclus)  1-classError(trueclu, obsclus)$errorRate
 >
 > AI(ClasPred[[2]],cagarber)
 [1] 0.8169014
