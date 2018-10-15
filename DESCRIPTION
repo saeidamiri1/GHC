@@ -1,0 +1,18 @@
+Package: GHC
+Type: Package
+Title: Categorical clustering
+Version: 1.0
+Date: 2016-1-13
+Author: Saeid Amiri, Bertrand Clarke and Jennifer Clarke.
+Maintainer: Saeid Amiri <saeid.amiri1@gmail.com>
+Depends:
+    R (>= 3.2.3)
+Imports:
+    foreach,
+    doParallel
+Description: This package implements the clustering methods of categoriacal data
+    discussed in Amiri, S., Clarke, B. and Clarke J. (2015). Clustering categorical
+    data via ensembling dissimilarity matrices. arXiv:1506.07930.
+License: GPL (>= 2)
+LazyLoad: yes
+
