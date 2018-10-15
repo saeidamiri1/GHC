@@ -1,10 +1,9 @@
 # General Hybrid Clustering
 Clustering is an unsupervised technique to find underlying structure in a dataset by grouping
-data points into subsets that are as homogeneous as possible, clustering is a widely used unsupervised technique for identifying natural classes within a set of data. [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/GHCsource/manuscript/manuscript-vr3.pdf) proposed a clustering technique for general clustering problems including those that have non-convex clusters. The proposed is fully nonparametric and it generates clusters for a given desired number of clusters K. They also discussed estimating the size of cluster.
+data points into subsets that are as homogeneous as possible, clustering is a widely used unsupervised technique for identifying natural classes within a set of data. [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/manuscript/manuscript-vr3.pdf) proposed a clustering technique for general clustering problems including those that have non-convex clusters. The proposed is fully nonparametric and it generates clusters for a given desired number of clusters K. They also discussed estimating the size of cluster.
 
 
 ## Contents
-1. [GHC library](#ghc-library)
 1. [Techniques](#techniques)
    - [Clustering](#clustering)
    - [Size of Cluster](#size-of-cluster)
@@ -31,20 +30,12 @@ data points into subsets that are as homogeneous as possible, clustering is a wi
 
 5. [References](#references)
 
-# GHC library
-We implemented the methods discussed [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/GHCsource/manuscript/manuscript-vr3.pdf) in an R package, entitled GHC, and uploaded in Github. To load the library in R, run the following script.
-
- ```
- library("devtools")
- devtools::install_github('saeidamiri1/GHC')
- ```
-
 # Techniques
  We developed algorithms for clustering and estimating the size of cluster which are explained in the belows.
 ## Clustering
 The proposed clustering method is referred to as Stabilized Hybrid Clustering (SHC) and its steps is presented in Algorithm 1,
 
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/GHCsourceimages/algorithm1.png" width="800">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/algorithm1.png" width="800">
 
 Algorithm 1 is implemented in R,
 
@@ -75,7 +66,7 @@ spiral0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/data
 spiral<-spiral0[,2:3]
 plot(spiral)
 ```
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/spiral.jpeg" width="300">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/spiral.jpeg" width="300">
 
 
 ####  GARBER data
@@ -119,10 +110,10 @@ The other dataset that we used is about Wheat metabolomics data, see Kessler et 
 whme<-read.csv("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4371749/bin/Data_Sheet_1.CSV",sep='',header = TRUE)
 ```
 
-The source is also available on [Github](https://github.com/saeidamiri1/GHC/tree/master/GHCsource/dataset/metabolicwheat).
+The source is also available on [Github](https://github.com/saeidamiri1/GHC/tree/master/dataset/metabolicwheat).
 
 ```
-whme<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/metabolicwheat/datasheet1.csv",sep='',header = TRUE)
+whme<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/metabolicwheat/datasheet1.csv",sep='',header = TRUE)
 ```
 
 
@@ -130,7 +121,7 @@ whme<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsour
 We generated many simulated convex data sets with  very different scales in one dimension (vertical) but similar scales on another (horizontal). One of them is Github and accessible via the following scripts   
 
 ```
-scale0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/scales0.csv",sep=",",header=TRUE)
+scale0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/scales0.csv",sep=",",header=TRUE)
 scaled<-as.matrix(scale0[,2:3])
 scalel<-scale0[,1]
 ```
@@ -139,18 +130,16 @@ scalel<-scale0[,1]
 Fu and Medico (2007) developed a fuzzy clustering technique for DNA microarray data which they considered on the test data FLAME, the data is accessible via the following script.
 
 ```
-flame0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/GHCsource/dataset/flame0.csv",sep=",",header=TRUE)
+flame0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/flame0.csv",sep=",",header=TRUE)
 flamed<-as.matrix(flame0[,2:3])
 flamel<-flame0[,4]
 ```
 
 # How to run
-### Install the package
-The source of codes are implemented  R packaged entitled GHC in GitHub and using the following code can be loaded in R
-
+### Upload Source
+The source of codes are available in GitHub and using the following code can be uploaded in R
 ```
-library("devtools")
-devtools::install_github('saeidamiri1/GHC')
+source('https://raw.githubusercontent.com/saeidamiri1/GHC/master/codes/SHC.R')
 ```
 
 Also load the following libraries which run the computations in parallel,
@@ -161,19 +150,12 @@ library("doParallel")
 ```
 
 ###  Prepare data set
-To describe the codes, we used the spiral data,  the following scripts load spiral data, print,  and change its structure to matrix. Use your data set with the ***matrix format*** .
+To describe the codes, we used the spiral data,  the following script load source, dataset and plot it.  Use your data set with **matrix format**.
 
 ```
-> data("spiral")
->  head(spiral)
-     V1   V2
-1 31.95 7.95
-2 31.15 7.30
-3 30.45 6.65
-4 29.70 6.00
-5 28.90 5.55
-6 28.05 5.00
->  head(as.matrix(spiral))
+> spiral0<-read.csv("https://raw.githubusercontent.com/saeidamiri1/GHC/master/dataset/spiral0.csv",sep=",",header=TRUE)
+> spiral<-as.matrix(spiral0[,2:3])
+> head(spiral)
         V1   V2
 [1,] 31.95 7.95
 [2,] 31.15 7.30
@@ -181,8 +163,6 @@ To describe the codes, we used the spiral data,  the following scripts load spir
 [4,] 29.70 6.00
 [5,] 28.90 5.55
 [6,] 28.05 5.00
-
-spiral<-as.matrix(spiral)
 ```
 
 ### Run Cluster
@@ -202,7 +182,7 @@ The dendrogram can be also plotted,
 > plot(hclust(CLUS[[1]],method="single"),h=-1)
 ```
 
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/Rplot01.jpeg" width="500">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/Rplot01.jpeg" width="500">
 
 
 The predicted clusters are also available,
@@ -224,17 +204,17 @@ The predicted clusters are also available,
 # plot the data with the assigned clusters
 plot(spiral,col=CLUS[[2]])
 ```
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/Rplot02.jpeg" width="300">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/Rplot02.jpeg" width="300">
 
 
 It is of interest to run the proposed method for a cluster size of #4,  the following shows the codes and the clusters,
 
 ```
-> CLUS<-SHC(spiral,4,B=200,knmin=knmin0,knmax=knmax0)
+> CLUS<-SHC(Spiral,4,B=200,knmin=knmin0,knmax=knmax0)
 > plot(spiral,col=CLUS[[2]])
 ```
 
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/Rplot03.jpeg" width="300">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/Rplot03.jpeg" width="300">
 
 
 ###  Size of clusters
@@ -248,7 +228,7 @@ It is of interest to run the proposed method for a cluster size of #4,  the foll
 # plot the dendrogram
 > plot(hclust(KCLUS[[1]],method="single"),h=-1)
 ```
-<img src="https://github.com/saeidamiri1/GHC/blob/master/GHCsource/images/Rplot04.jpeg" width="500">
+<img src="https://github.com/saeidamiri1/GHC/blob/master/images/Rplot04.jpeg" width="500">
 
 
 ```
@@ -351,7 +331,7 @@ CT is Hybrid hierarchical clustering using mutual clusters developed in Chipman 
 ```
 
 #### Chameleon (CHA)
-The CHAMELEON (CHA) clustering, Karypis et al. (1999),  is implemented in a software entitled ["cluto"](http://glaros.dtc.umn.edu/gkhome/cluto/cluto/overview), we used cluto-2.1.2 for the computation.  To run the clustering download the software from http://glaros.dtc.umn.edu/gkhome/cluto/cluto/download. The manual is inside the software, we put is in the Github as well [Chameleon manual]((https://github.com/saeidamiri1/GHC/blob/master/GHCsource/codes/clustomanual.pdf).
+The CHAMELEON (CHA) clustering, Karypis et al. (1999),  is implemented in a software entitled ["cluto"](http://glaros.dtc.umn.edu/gkhome/cluto/cluto/overview), we used cluto-2.1.2 for the computation.  To run the clustering download the software from http://glaros.dtc.umn.edu/gkhome/cluto/cluto/download. The manual is inside the software, we put is in the Github as well [Chameleon manual]((https://github.com/saeidamiri1/GHC/blob/master/codes/clustomanual.pdf).
 
 
 
