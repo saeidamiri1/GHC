@@ -1,18 +1,17 @@
 Package: GHC
 Type: Package
-Title: Categorical clustering
+Title: General Hybrid Clustering Technique
 Version: 1.0
-Date: 2016-1-13
+Date: 2010-10-15
 Author: Saeid Amiri, Bertrand Clarke and Jennifer Clarke.
 Maintainer: Saeid Amiri <saeid.amiri1@gmail.com>
 Depends:
-    R (>= 3.2.3)
+    R (>= 3.5.0)
 Imports:
     foreach,
     doParallel
-Description: This package implements the clustering methods of categoriacal data
-    discussed in Amiri, S., Clarke, B. and Clarke J. (2015). Clustering categorical
-    data via ensembling dissimilarity matrices. arXiv:1506.07930.
+Description: This package implements the Hybrid Clustering Technique
+    discussed in Amiri, S., Clarke, B, & Clarke, J. (2018). A General Hybrid Clustering Technique. To appear in Journal of Computational and Graphical Statistics.
 License: GPL (>= 2)
 LazyLoad: yes
 

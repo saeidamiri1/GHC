@@ -46,13 +46,16 @@ The function 'SHC' generates the Stabilized Hybrid Clustering (SHC) presented in
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+library("foreach")
+library("doParallel")
+
 knmin0<-2
 knmax0<-floor(dim(spiral)[1]/5)
-CLUS<-SHC(as.matrix(spiral),3,B=20,knmin=knmin0,knmax=knmax0)
+CLUS<-SHC(as.matrix(spiral),3,B=200,knmin=knmin0,knmax=knmax0)
 # plot the dendrogram
 plot(hclust(CLUS[[1]],method="single"),h=-1)
 # print the assigned clusters to observation
- print(CLUS[[2]])
+print(CLUS[[2]])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -19,7 +19,7 @@ License: \tab GPL-2\cr
 Maintainer: Saeid Amiri <saeid.amiri1@gmail.com>
 }
 \references{
-Amiri, S., Clarke, B, & Clarke, J. (2018). A General Hybrid Clustering Technique. To appear in Journal of Computational and Graphical Statistics.
+Amiri, S., Clarke, B, Clarke, J. & Koepke, H.A. (2018). A General Hybrid Clustering Technique. To appear in Journal of Computational and Graphical Statistics.
 
 \url{https://github.com/saeidamiri1/GHC}
 

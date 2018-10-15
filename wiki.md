@@ -1,6 +1,6 @@
 # General Hybrid Clustering
 Clustering is an unsupervised technique to find underlying structure in a dataset by grouping
-data points into subsets that are as homogeneous as possible, clustering is a widely used unsupervised technique for identifying natural classes within a set of data. [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/manuscript/manuscript-vr3.pdf) proposed a clustering technique for general clustering problems including those that have non-convex clusters. The proposed is fully nonparametric and it generates clusters for a given desired number of clusters K. They also discussed estimating the size of cluster.
+data points into subsets that are as homogeneous as possible, clustering is a widely used unsupervised technique for identifying natural classes within a set of data. [Amiri et al. (2018)](https://github.com/saeidamiri1/GHC/blob/master/GHCsource/manuscript/manuscript-vr3.pdf) proposed a clustering technique for general clustering problems including those that have non-convex clusters. The proposed is fully nonparametric and it generates clusters for a given desired number of clusters K. They also discussed estimating the size of cluster.
 
 
 ## Contents

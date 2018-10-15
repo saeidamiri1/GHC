@@ -23,6 +23,7 @@ The spiral data which is a non-convex data, we used this data to explain the pro
 \examples{
 ### load Spiral data
 data("spiral")
-
+head(spiral)
+plot(spiral)
 }
 \keyword{datasets}

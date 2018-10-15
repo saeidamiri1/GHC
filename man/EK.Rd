@@ -30,7 +30,7 @@ The function 'EK' gestimate the size of cluster presented in Algorithm 2, see Am
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{Amiri, S., Clarke, B, & Clarke, J. (2018). A General Hybrid Clustering Technique. To appear in Journal of Computational and Graphical Statistics.
+\references{Amiri, S., Clarke, B, Clarke, J. & Koepke, H.A. (2018). A General Hybrid Clustering Technique. To appear in Journal of Computational and Graphical Statistics.
 }
 \author{Saeid Amiri, Bertrand Clarke and Jennifer Clarke.
 %%  ~~who you are~~
@@ -45,6 +45,9 @@ The function 'EK' gestimate the size of cluster presented in Algorithm 2, see Am
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+library("foreach")
+library("doParallel")
+
 knmin0<-2
 knmax0<-floor(dim(spiral)[1]/5)
 
